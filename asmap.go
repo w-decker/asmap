@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -12,7 +13,7 @@ import (
 func Separator(line string) string {
 
 	//
-	separators := []rune{',', '\t', ';', '|', ' '}
+	separators := []rune{',', '\t', ';', '|', ' ', '/'}
 	separatorCounts := make(map[rune]int)
 
 	//
@@ -123,6 +124,84 @@ func Other(f string) (map[string][]string, error) {
 	}
 
 	return result, nil
+}
+
+// modular function that converts string slice in map to int (base 10)
+func Str2Int(m map[string][]string, key string) map[string]interface{} {
+
+	//
+	k := make([]string, len(m))
+	for i := range m {
+		if i == key {
+			continue
+		}
+		k = append(k, i)
+	}
+
+	//
+	c := make(map[string]interface{})
+	values, exists := m[key]
+	if !exists {
+		return c
+	}
+
+	//
+	intValues := make([]int, 0, len(values))
+	for _, value := range values {
+		intValue, err := strconv.Atoi(value)
+		if err != nil {
+			fmt.Printf("error converting value %v: %v\n", value, err)
+			continue
+		}
+		intValues = append(intValues, intValue)
+	}
+	c[key] = intValues
+
+	//
+	for _, v := range k {
+		c[v] = m[v]
+	}
+
+	return c
+}
+
+// modular function that converts string slice in map to float64
+func Str2Float64(m map[string][]string, key string) map[string]interface{} {
+
+	//
+	k := make([]string, len(m))
+	for i := range m {
+		if i == key {
+			continue
+		}
+		k = append(k, i)
+	}
+
+	//
+	c := make(map[string]interface{})
+	values, exists := m[key]
+	if !exists {
+		return c
+	}
+
+	//
+	floatValues := make([]float64, 0, len(values))
+	for _, value := range values {
+		floatValue, err := strconv.ParseFloat(value, 64)
+		if err != nil {
+			fmt.Printf("error converting value %v: %v\n", value, err)
+			continue
+		}
+		floatValues = append(floatValues, floatValue)
+	}
+	c[key] = floatValues
+
+	//
+	for _, v := range k {
+		c[v] = m[v]
+	}
+
+	return c
 }
 
 // function
