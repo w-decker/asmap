@@ -107,10 +107,12 @@ func Other(f string) (map[string][]string, error) {
 	//
 	for s.Scan() {
 
+		//
 		cl := strings.Split(s.Text(), sep)
 		if len(cl) != len(headers) {
 			panic("Error")
 		}
+
 		//
 		for i, value := range cl {
 			result[headers[i]] = append(result[headers[i]], value)
@@ -204,7 +206,7 @@ func Str2Float64(m map[string][]string, key string) map[string]interface{} {
 	return c
 }
 
-// function
+// main function
 func ReadAsMap(f string) (map[string][]string, error) {
 
 	//
